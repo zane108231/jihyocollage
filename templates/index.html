@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InstaCollage - Instagram Carousel Collage Maker</title>
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <style>
+        :root {
+            --instagram-gradient: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D, #F56040, #F77737, #FCAF45, #FFDC80);
+            --instagram-primary: #C13584;
+            --instagram-secondary: #405DE6;
+            --instagram-dark: #121212;
+            --instagram-light: #FAFAFA;
+            --instagram-border: #DBDBDB;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --text-primary: #262626;
+            --text-secondary: #8e8e8e;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bs-body-bg);
+            color: var(--bs-body-color);
+            line-height: 1.5;
+            padding-bottom: 60px;
+        }
+        
+        .instagram-gradient-text {
+            background: var(--instagram-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+        }
+        
+        .app-header {
+            padding: 20px 0;
+            border-bottom: 1px solid var(--bs-border-color);
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .gradient-ball {
+            width: 150px;
+            height: 150px;
+            background: var(--instagram-gradient);
+            border-radius: 50%;
+            position: absolute;
+            filter: blur(80px);
+            opacity: 0.5;
+            z-index: -1;
+        }
+        
+        .ball-1 {
+            top: -20px;
+            right: 10%;
+        }
+        
+        .ball-2 {
+            bottom: -50px;
+            left: 15%;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .logo-icon {
+            background: var(--instagram-gradient);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .app-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .modern-card {
+            background-color: var(--bs-body-bg);
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--bs-border-color);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 30px;
+        }
+        
+        .modern-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--bs-border-color);
+        }
+        
+        .card-header-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: var(--instagram-gradient);
+            border-radius: 8px;
+            margin-right: 12px;
+            color: white;
+        }
+        
+        .card-title {
+            font-weight: 600;
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        
+        .card-body {
+            padding: 24px;
+        }
+        
+        .api-details {
+            margin-top: 20px;
+        }
+        
+        .api-snippet {
+            background-color: var(--bs-tertiary-bg);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 10px;
+            position: relative;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            padding: 4px 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .form-control {
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 0.95rem;
+        }
+        
+        .form-control:focus {
+            border-color: var(--instagram-primary);
+            box-shadow: 0 0 0 0.25rem rgba(193, 53, 132, 0.25);
+        }
+        
+        .gradient-btn {
+            background: var(--instagram-gradient);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            padding: 12px 24px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .gradient-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .gradient-btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-icon {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .result-container {
+            padding: 20px;
+            border-radius: 16px;
+            background-color: var(--bs-tertiary-bg);
+            margin-top: 30px;
+        }
+        
+        .collage-container {
+            background-color: var(--bs-body-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .collage-img {
+            max-width: 100%;
+            border-radius: 8px;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        
+        .collage-img:hover {
+            transform: scale(1.02);
+        }
+        
+        .collage-caption {
+            margin-top: 15px;
+            color: var(--bs-body-color);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .collage-heart {
+            color: #ed4956;
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+        
+        .loading-spinner {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--instagram-primary);
+            animation: spin 1s ease-in-out infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .url-example {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: var(--bs-tertiary-bg);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: var(--bs-secondary-color);
+        }
+        
+        .api-section-title {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .api-icon {
+            width: 24px;
+            height: 24px;
+            background: var(--instagram-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            margin-right: 8px;
+            color: white;
+            font-size: 14px;
+        }
+        
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--instagram-secondary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            margin-top: 15px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .download-btn:hover {
+            background-color: var(--instagram-primary);
+            transform: translateY(-2px);
+        }
+        
+        .download-icon {
+            margin-right: 8px;
+        }
+        
+        /* Instagram-style notification */
+        .insta-notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--bs-body-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            padding: 12px 20px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .notification-icon {
+            margin-right: 12px;
+            color: var(--instagram-primary);
+        }
+        
+        @media (max-width: 768px) {
+            .app-title {
+                font-size: 1.4rem;
+            }
+            
+            .card-body {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body data-bs-theme="dark">
+    <div class="gradient-ball ball-1"></div>
+    <div class="gradient-ball ball-2"></div>
+    
+    <header class="app-header">
+        <div class="container">
+            <div class="logo-container">
+                <div class="logo-icon">IC</div>
+                <h1 class="app-title"><span class="instagram-gradient-text">Insta</span>Collage</h1>
+            </div>
+            <p class="text-secondary mb-0">Transform Instagram carousels into beautiful collages in seconds</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="modern-card">
+                    <div class="card-header">
+                        <div class="card-header-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
+                            </svg>
+                        </div>
+                        <h2 class="card-title">Create Collage</h2>
+                    </div>
+                    <div class="card-body">
+                        <form id="collageForm">
+                            <div class="mb-3">
+                                <label for="urlsInput" class="form-label fw-medium">Instagram Image URLs</label>
+                                <p class="small text-secondary mb-2">Paste URLs from Instagram carousel posts (one per line)</p>
+                                <textarea class="form-control" id="urlsInput" rows="6" 
+                                    placeholder="https://instagram.fceb1-1.fna.fbcdn.net/v/t51.29350-15/image1.webp&#10;https://instagram.fceb1-1.fna.fbcdn.net/v/t51.29350-15/image2.webp&#10;..."></textarea>
+                                <div class="url-example">
+                                    <strong>Tip:</strong> Right-click images from Instagram carousels and select "Copy Image Address" to get the URL
+                                </div>
+                            </div>
+                            <button type="submit" class="gradient-btn">
+                                <span class="btn-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                                        <path d="M2 4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.5l-1.5-1.5h-5L5.5 4H2zm3.5 4.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+                                    </svg>
+                                </span>
+                                Generate Collage
+                            </button>
+                        </form>
+                        <div class="loading-spinner" id="loadingSpinner"></div>
+                        <div id="errorContainer" class="alert alert-danger mt-4 d-none"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="modern-card">
+                    <div class="card-header">
+                        <div class="card-header-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                            </svg>
+                        </div>
+                        <h2 class="card-title">API Documentation</h2>
+                    </div>
+                    <div class="card-body">
+                        <p>Create beautiful Instagram-style collages from carousel posts with our simple API.</p>
+                        
+                        <div class="api-section-title">
+                            <div class="api-icon">EP</div>
+                            <span>Endpoint</span>
+                        </div>
+                        <div class="api-snippet">
+                            POST /api/create-collage
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        
+                        <div class="api-section-title">
+                            <div class="api-icon">RQ</div>
+                            <span>Request Format</span>
+                        </div>
+                        <div class="api-snippet">
+{
+  "urls": [
+    "https://instagram.fceb1-1.fna.fbcdn.net/v/t51.29350-15/image1.webp",
+    "https://instagram.fceb1-1.fna.fbcdn.net/v/t51.29350-15/image2.webp"
+  ]
+}
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        
+                        <div class="api-section-title">
+                            <div class="api-icon">RS</div>
+                            <span>Response Format</span>
+                        </div>
+                        <div class="api-snippet">
+{
+  "success": true,
+  "message": "Collage created successfully",
+  "collage_url": "https://example.com/static/collages/collage_12345.jpg"
+}
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="resultContainer" class="modern-card d-none mt-4">
+            <div class="card-header">
+                <div class="card-header-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-11zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1h-7zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6v7zm1.5.5A.5.5 0 0 1 1 13V6a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-13z"/>
+                    </svg>
+                </div>
+                <h2 class="card-title">Your Collage</h2>
+            </div>
+            <div class="card-body">
+                <div id="collageContainer" class="text-center">
+                    <img id="collageImage" class="collage-img shadow-sm" alt="Generated collage">
+                    <div class="collage-caption">
+                        <span class="collage-heart">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                            </svg>
+                        </span>
+                        <span id="collageCaption">Your Instagram Carousel Collage</span>
+                    </div>
+                    <a id="downloadLink" href="#" class="download-btn" download>
+                        <span class="download-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                            </svg>
+                        </span>
+                        Download Collage
+                    </a>
+                </div>
+                
+                <div class="api-section-title mt-4">
+                    <div class="api-icon">JS</div>
+                    <span>API Response</span>
+                </div>
+                <div class="api-snippet" id="responseJson"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="insta-notification" id="notification">
+        <span class="notification-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+            </svg>
+        </span>
+        <span id="notificationText">Copied to clipboard!</span>
+    </div>
+    
+    <script>
+        // Copy buttons functionality
+        document.querySelectorAll('.copy-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const codeBlock = this.parentElement;
+                const textToCopy = codeBlock.textContent.trim().replace('Copy', '');
+                
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    showNotification('Copied to clipboard!');
+                });
+            });
+        });
+        
+        // Notification functionality
+        function showNotification(text) {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notificationText.textContent = text;
+            notification.style.opacity = '1';
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+            }, 3000);
+        }
+        
+        // Form submission
+        document.getElementById('collageForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Reset previous results
+            document.getElementById('resultContainer').classList.add('d-none');
+            document.getElementById('errorContainer').classList.add('d-none');
+            
+            // Show loading spinner
+            const spinner = document.getElementById('loadingSpinner');
+            spinner.style.display = 'block';
+            
+            try {
+                // Get URLs from textarea
+                const urlsText = document.getElementById('urlsInput').value;
+                const urls = urlsText.split('\n')
+                    .map(url => url.trim())
+                    .filter(url => url.length > 0);
+                
+                if (urls.length === 0) {
+                    throw new Error('Please enter at least one Instagram image URL');
+                }
+                
+                // Make API request
+                const response = await fetch('/api/create-collage', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ urls })
+                });
+                
+                const data = await response.json();
+                
+                // Display API response
+                document.getElementById('responseJson').textContent = JSON.stringify(data, null, 2);
+                
+                // If successful, display the collage
+                if (data.success && data.collage_url) {
+                    // Update image source
+                    const collageImage = document.getElementById('collageImage');
+                    collageImage.src = data.collage_url;
+                    
+                    // Update download link
+                    const downloadLink = document.getElementById('downloadLink');
+                    downloadLink.href = data.collage_url;
+                    
+                    // Update caption
+                    const collageCaption = document.getElementById('collageCaption');
+                    collageCaption.textContent = `Collage of ${urls.length} Instagram images`;
+                    
+                    // Show result container
+                    document.getElementById('resultContainer').classList.remove('d-none');
+                    
+                    // Scroll to result
+                    document.getElementById('resultContainer').scrollIntoView({ behavior: 'smooth' });
+                    
+                    // Show success notification
+                    showNotification('Collage created successfully!');
+                } else {
+                    // Show error message
+                    const errorContainer = document.getElementById('errorContainer');
+                    errorContainer.textContent = data.message || 'Failed to create collage';
+                    errorContainer.classList.remove('d-none');
+                }
+            } catch (error) {
+                // Show error message
+                const errorContainer = document.getElementById('errorContainer');
+                errorContainer.textContent = error.message || 'An error occurred';
+                errorContainer.classList.remove('d-none');
+            } finally {
+                // Hide loading spinner
+                spinner.style.display = 'none';
+            }
+        });
+        
+        // Make collage image clickable to open in new tab
+        document.getElementById('collageImage').addEventListener('click', function() {
+            window.open(this.src, '_blank');
+        });
+    </script>
+</body>
+</html>
